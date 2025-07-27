@@ -7,6 +7,7 @@ ________________________________________
 Data Sources
 
 I used publicly available historical trip data from the Divvy bike share system for the full calendar year of 2023. The dataset includes trip level data such as:
+
 •	ride_id
 
 •	rideable_type
