@@ -1,0 +1,12 @@
+SELECT
+  member_casual,
+  rideable_type,
+  COUNT(*) AS total_rides
+FROM
+  all_trips_2023
+  WHERE
+  rideable_type != 'docked_bike'
+GROUP BY
+  member_casual, rideable_type
+ORDER BY
+  member_casual, total_rides DESC;
