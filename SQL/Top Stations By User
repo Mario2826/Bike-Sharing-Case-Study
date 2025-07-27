@@ -1,0 +1,13 @@
+SELECT
+  start_station_name,
+  member_casual,
+  COUNT(*) AS ride_count
+FROM
+  all_trips_2023
+WHERE
+  start_station_name IS NOT NULL
+GROUP BY
+  start_station_name, member_casual
+ORDER BY
+  ride_count DESC
+LIMIT 10;
