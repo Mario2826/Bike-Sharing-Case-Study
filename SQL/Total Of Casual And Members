@@ -1,0 +1,7 @@
+SELECT
+  member_casual,
+  COUNT(*) AS total_rides
+FROM
+  all_trips_2023
+GROUP BY
+  member_casual;
