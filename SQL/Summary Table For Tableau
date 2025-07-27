@@ -1,0 +1,11 @@
+SELECT
+  day_of_week,
+  member_casual,
+  COUNT(*) AS total_rides,
+  ROUND(AVG(ride_length) / 60.0, 2) AS avg_duration_minutes
+FROM
+  all_trips_2023
+GROUP BY
+  day_of_week, member_casual
+ORDER BY
+  member_casual, day_of_week;
