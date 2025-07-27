@@ -1,0 +1,10 @@
+UPDATE all_trips_2023
+SET day_of_week = CASE
+  WHEN STRFTIME('%w', started_at) = '0' THEN 'Sunday'
+  WHEN STRFTIME('%w', started_at) = '1' THEN 'Monday'
+  WHEN STRFTIME('%w', started_at) = '2' THEN 'Tuesday'
+  WHEN STRFTIME('%w', started_at) = '3' THEN 'Wednesday'
+  WHEN STRFTIME('%w', started_at) = '4' THEN 'Thursday'
+  WHEN STRFTIME('%w', started_at) = '5' THEN 'Friday'
+  WHEN STRFTIME('%w', started_at) = '6' THEN 'Saturday'
+END;
