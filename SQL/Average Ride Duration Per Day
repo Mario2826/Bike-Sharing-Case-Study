@@ -1,0 +1,20 @@
+SELECT
+  day_of_week,
+  member_casual,
+  ROUND(AVG(ride_length) / 60.0, 2) AS avg_duration_minutes
+FROM
+  all_trips_2023
+GROUP BY
+  day_of_week,
+  member_casual
+ORDER BY
+  CASE 
+    WHEN day_of_week = 'Sunday' THEN 1
+    WHEN day_of_week = 'Monday' THEN 2
+    WHEN day_of_week = 'Tuesday' THEN 3
+    WHEN day_of_week = 'Wednesday' THEN 4
+    WHEN day_of_week = 'Thursday' THEN 5
+    WHEN day_of_week = 'Friday' THEN 6
+    WHEN day_of_week = 'Saturday' THEN 7
+  END,
+  member_casual;
