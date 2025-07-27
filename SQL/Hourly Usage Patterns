@@ -1,0 +1,7 @@
+SELECT 
+  STRFTIME('%H', started_at) AS hour_of_day,
+  member_casual,
+  COUNT(*) AS ride_count
+FROM all_trips_2023
+GROUP BY hour_of_day, member_casual
+ORDER BY hour_of_day;
