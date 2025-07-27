@@ -51,6 +51,7 @@ Key Analyses Conducted (SQL)
 •	Added day_of_week and hour_of_day columns
 
 SQL Queries Performed:
+
 •	Total rides by member type
 
 •	Average ride duration by member type
@@ -66,6 +67,7 @@ ________________________________________
 Tableau Visualizations
 
 Created multiple dashboards to support storytelling:
+
 •	Total rides by user type
 
 •	Ride length distribution by user type
