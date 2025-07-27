@@ -35,6 +35,7 @@ Data Preparation & Cleaning
 1.	Initial Audit: Reviewed the available months and determined that 2023 had more complete and consistent data compared to 2024.
 2.	Data Consolidation: CSV files for each month were converted to Excel workbooks and initially reviewed in Excel.
 3.	Cleaning Steps:
+
 o	Added columns for ride_length and day_of_week
 
 o	Removed rows with missing values (e.g., empty station names or times)
