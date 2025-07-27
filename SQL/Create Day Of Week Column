@@ -1,0 +1,2 @@
+ALTER TABLE all_trips_2023
+ADD COLUMN day_of_week TEXT;
