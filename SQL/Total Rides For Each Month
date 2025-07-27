@@ -1,0 +1,10 @@
+SELECT
+  STRFTIME('%m', started_at) AS month,
+  member_casual,
+  COUNT(*) AS ride_count
+FROM
+  all_trips_2023
+GROUP BY
+  month, member_casual
+ORDER BY
+  month, member_casual;
