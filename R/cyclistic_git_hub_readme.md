@@ -4,28 +4,6 @@
 
 Analyze how casual riders and annual members use Cyclistic bike-share differently using R. This project is part of the Google Data Analytics Capstone and demonstrates data cleaning, transformation, visualization, and statistical testing using R and ggplot2.
 
-## Project Structure
-
-```
-Cyclistic-Case-Study/
-├── data/
-│   ├── original_data/        # Raw CSV files (2023 Divvy Trip Data)
-│   ├── cleaned_data/         # Cleaned datasets (optional if exporting)
-│   └── summary_exports/      # Exported summary CSVs (ride counts, avg durations)
-├── scripts/
-│   ├── cyclistic_analysis.R  # Full R script (data cleaning, analysis, visuals)
-│   └── cyclistic_report.Rmd  # (Optional) R Markdown report version
-├── visuals/
-│   ├── total_rides_user_type.png
-│   ├── ride_length_distribution.png
-│   ├── rides_by_day_of_week.png
-│   ├── rides_by_hour.png
-│   ├── top_start_stations.png
-│   └── bike_type_preference.png
-├── README.md                 # This file
-└── case_study_report.pdf     # Polished case study report (optional)
-```
-
 ## Tools & Technologies
 
 - R & RStudio
