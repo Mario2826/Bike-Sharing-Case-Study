@@ -1,0 +1,165 @@
+---
+title: "Cyclistic Bike-Share Case Study"
+author: "Mario Feliciano"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(scales)
+```
+
+# Business Task
+
+Analyze how casual riders and annual members use Cyclistic bike-share differently. Provide data-driven insights and recommendations for increasing annual memberships.
+
+# Data Cleaning & Preparation
+
+```{r data-import}
+path <- "C:/Users/Mario/Documents/Data Analysis/Case Studies/Bike Sharing Case Study/Original data/2023 Divvy Tripdata/"
+file_list <- list.files(path = path, pattern = "*.csv", full.names = TRUE)
+
+all_trips_raw <- file_list %>%
+  lapply(read_csv) %>%
+  bind_rows()
+
+all_trips_cleaned <- all_trips_raw %>%
+  mutate(
+    started_at = ymd_hms(started_at),
+    ended_at = ymd_hms(ended_at),
+    ride_length = as.numeric(difftime(ended_at, started_at, units = "mins")),
+    day_of_week = weekdays(started_at),
+    hour_of_day = hour(started_at),
+    date = as.Date(started_at)
+  ) %>%
+  filter(ride_length >= 1 & ride_length <= 1440)
+
+# Fix day_of_week as an ordered factor
+all_trips_cleaned <- all_trips_cleaned %>%
+  mutate(day_of_week = factor(day_of_week,
+    levels=c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"),
+    ordered = TRUE))
+```
+
+# Summary Statistics
+
+```{r summary-stats}
+summary_stats <- all_trips_cleaned %>%
+  group_by(member_casual) %>%
+  summarise(
+    avg_ride_length = round(mean(ride_length), 2),
+    median_ride_length = round(median(ride_length), 2),
+    total_rides = n()
+  )
+
+summary_stats
+```
+
+# Visualizations
+
+## Total Rides by User Type
+
+```{r total-rides}
+custom_colors <- c("casual" = "#F8766D", "member" = "#00BFC4")
+
+ggplot(all_trips_cleaned, aes(x=member_casual, fill=member_casual)) +
+  geom_bar() +
+  geom_text(stat='count', aes(label = after_stat(comma(count))), vjust = -0.5, size=5) +
+  scale_fill_manual(values = custom_colors) +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title="Total Rides by User Type", x="User Type", y="Ride Count") +
+  theme_light(base_size = 14)
+```
+
+## Ride Length Distribution (0-60 mins)
+
+```{r ride-length-distribution}
+ggplot(all_trips_cleaned %>% filter(ride_length <= 60), aes(x=ride_length, fill=member_casual)) +
+  geom_density(alpha=0.5) +
+  scale_fill_manual(values = custom_colors) +
+  labs(title="Ride Length Distribution (0-60 mins)", x="Ride Length (minutes)", y="Density") +
+  theme_light(base_size = 14)
+```
+
+## Rides by Day of Week
+
+```{r rides-by-day}
+ggplot(all_trips_cleaned, aes(x=day_of_week, fill=member_casual)) +
+  geom_bar() +
+  facet_wrap(~member_casual) +
+  scale_fill_manual(values = custom_colors) +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title="Rides by Day of Week (Faceted by User Type)", x="Day", y="Total Rides") +
+  theme_light(base_size = 14)
+```
+
+## Rides by Hour of Day
+
+```{r rides-by-hour}
+ggplot(all_trips_cleaned, aes(x=hour_of_day, fill=member_casual)) +
+  geom_bar(position="dodge") +
+  scale_fill_manual(values = custom_colors) +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title="Rides by Hour of Day", x="Hour of Day", y="Ride Count") +
+  theme_light(base_size = 14)
+```
+
+## Top 10 Start Stations
+
+```{r top-start-stations}
+top_stations <- all_trips_cleaned %>%
+  filter(!is.na(start_station_name)) %>%
+  group_by(start_station_name) %>%
+  summarise(total_rides = n()) %>%
+  arrange(desc(total_rides)) %>%
+  head(10)
+
+ggplot(top_stations, aes(x=reorder(start_station_name, total_rides), y=total_rides)) +
+  geom_col(fill="#1F77B4") +
+  coord_flip() +
+  labs(title="Top 10 Start Stations", x="Station", y="Total Rides") +
+  scale_y_continuous(labels = label_comma()) +
+  theme_light(base_size = 14)
+```
+
+## Bike Type Preference
+
+```{r bike-type-preference}
+all_trips_cleaned %>%
+  group_by(member_casual, rideable_type) %>%
+  summarise(total_rides = n(), .groups = 'drop') %>%
+  ggplot(aes(x=rideable_type, y=total_rides, fill=member_casual)) +
+  geom_col(position="dodge") +
+  scale_fill_manual(values = custom_colors) +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title="Bike Type Preference by User Type", x="Rideable Type", y="Total Rides") +
+  theme_light(base_size = 14)
+```
+
+# T-Test: Ride Length Comparison
+
+```{r t-test}
+t_test_result <- t.test(ride_length ~ member_casual, data = all_trips_cleaned)
+t_test_result
+```
+
+# Conclusions
+
+- Casual riders take longer trips, often on weekends.
+- Members ride more frequently, especially on weekdays.
+- Classic bikes dominate usage, though casuals favor docked bikes more.
+- Top start stations are near leisure and business hubs.
+
+# Recommendations
+
+- Offer weekday commuter promos for casual riders.
+- Promote memberships at high-use casual stations.
+- Align marketing with usage trends (e.g., midday/weekends for casuals).
+
+*Prepared by Mario Feliciano*  
+Google Data Analytics Capstone Project
